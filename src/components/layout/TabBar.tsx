@@ -11,6 +11,10 @@ const TABS: { name: RouteName; path: string; label: string; icon: IconName }[] =
 export function TabBar() {
   const { route, navigate } = useRouter()
   const active: RouteName = route.name
+  const activeIndex = Math.max(
+    0,
+    TABS.findIndex((t) => t.name === active),
+  )
 
   return (
     <nav className="tabbar" aria-label="Primary">
@@ -23,22 +27,26 @@ export function TabBar() {
           <span className="rail-tag">Calculator & Voucher</span>
         </div>
       </div>
-      <div className="tabbar-inner">
-        {TABS.map((tab) => (
-          <button
-            key={tab.name}
-            type="button"
-            className="tab"
-            data-active={active === tab.name}
-            aria-current={active === tab.name ? 'page' : undefined}
-            onClick={() => navigate(tab.path)}
-          >
-            <span className="tab-icon">
-              <Icon name={tab.icon} size={19} />
-            </span>
-            <span>{tab.label}</span>
-          </button>
-        ))}
+      <div className="tabbar-inner" style={{ '--active-idx': activeIndex } as React.CSSProperties}>
+        <span className="tabbar-glider" aria-hidden="true" />
+        {TABS.map((tab) => {
+          const isActive = active === tab.name
+          return (
+            <button
+              key={tab.name}
+              type="button"
+              className="tab"
+              data-active={isActive}
+              aria-current={isActive ? 'page' : undefined}
+              onClick={() => navigate(tab.path)}
+            >
+              <span className="tab-icon">
+                <Icon name={tab.icon} size={19} />
+              </span>
+              <span className="tab-label">{tab.label}</span>
+            </button>
+          )
+        })}
       </div>
     </nav>
   )

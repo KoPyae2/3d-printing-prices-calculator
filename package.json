@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "dev:https": "HTTPS=true vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
+    "preview:https": "HTTPS=true vite preview --host",
+    "start": "npm run build && vite preview --host",
+    "start:https": "npm run build && HTTPS=true vite preview --host",
     "test": "node --test tests/*.test.ts"
   },
   "dependencies": {
@@ -20,6 +24,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vite-pwa/assets-generator": "^1.0.2",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^5.0.4",
     "eslint": "^9.37.0",
     "eslint-plugin-react-hooks": "^5.2.0",

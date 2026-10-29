@@ -11,7 +11,9 @@ export function PWABadge() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW()
+  } = useRegisterSW({
+    immediate: true,
+  })
 
   const [dismissed, setDismissed] = useState(false)
 

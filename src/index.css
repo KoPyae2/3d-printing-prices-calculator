@@ -205,7 +205,7 @@ textarea {
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0 14px calc(74px + env(safe-area-inset-bottom));
+  padding: 0 14px calc(88px + env(safe-area-inset-bottom));
   outline: none;
   min-width: 0;
 }
@@ -2144,36 +2144,87 @@ textarea.input {
   right: 0;
   bottom: 0;
   z-index: 70;
-  padding-bottom: env(safe-area-inset-bottom);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-top: 1px solid var(--border);
+  padding: 0 14px calc(0px + env(safe-area-inset-bottom));
+  pointer-events: none;
 }
 
 .tabbar-inner {
-  display: flex;
-  max-width: 560px;
+  --active-idx: 0;
+  pointer-events: auto;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 400px;
   margin: 0 auto;
-  padding: 5px var(--s-3);
+  padding: 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  -webkit-backdrop-filter: saturate(200%) blur(24px);
+  backdrop-filter: saturate(200%) blur(24px);
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    0 10px 30px -6px rgba(0, 0, 0, 0.48),
+    0 2px 8px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.tabbar-glider {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 10px) / 3);
+  border-radius: 999px;
+  background: linear-gradient(180deg,
+      color-mix(in srgb, var(--accent) 22%, var(--surface-2)),
+      color-mix(in srgb, var(--accent) 12%, var(--surface-2)));
+  border: 1px solid color-mix(in srgb, var(--accent) 36%, transparent);
+  box-shadow:
+    0 2px 10px color-mix(in srgb, var(--accent) 22%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translate3d(calc(var(--active-idx) * 100%), 0, 0);
+  transition: transform 360ms cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+}
+
+.tabbar-glider::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  width: 18px;
+  height: 2.5px;
+  border-radius: 999px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  opacity: 0.85;
 }
 
 .tab {
-  flex: 1;
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 5px 0 3px;
+  justify-content: center;
+  gap: 3px;
+  min-height: 50px;
+  padding: 6px 4px 5px;
   color: var(--muted);
   font-size: 0.6875rem;
   font-weight: 500;
-  border-radius: var(--r-sm);
-  transition: color var(--dur) var(--ease);
+  border-radius: 999px;
+  transition:
+    color 240ms var(--ease),
+    transform 160ms var(--ease);
 }
 
 .tab:hover {
   color: var(--text-2);
+}
+
+.tab:active {
+  transform: scale(0.92);
 }
 
 .tab[data-active='true'] {
@@ -2184,6 +2235,26 @@ textarea.input {
 .tab-icon {
   display: grid;
   place-items: center;
+  transition:
+    transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 260ms var(--ease);
+}
+
+.tab[data-active='true'] .tab-icon {
+  transform: translateY(-1.5px) scale(1.08);
+  filter: drop-shadow(0 3px 6px color-mix(in srgb, var(--accent) 38%, transparent));
+}
+
+.tab-label {
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  transition:
+    transform 280ms var(--ease),
+    opacity 240ms var(--ease);
+}
+
+.tab[data-active='true'] .tab-label {
+  transform: translateY(-0.5px);
 }
 
 .rail-brand {
@@ -2241,13 +2312,30 @@ textarea.input {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     padding: var(--s-5) var(--s-3);
+    pointer-events: auto;
   }
 
   .tabbar-inner {
+    display: flex;
     flex-direction: column;
     gap: 4px;
     padding: 0;
     max-width: none;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .tabbar-glider {
+    display: none;
+  }
+
+  .tab[data-active='true'] .tab-icon {
+    transform: none;
+    filter: none;
   }
 
   .rail-brand {
